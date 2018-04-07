@@ -1,6 +1,6 @@
-# gatsby-source-goodreads
+# gatsby-source-good-reads
 
-This is a source plugin for GatsbyJS to pull information from the GoodReads API.  It grabs all the books, author, and shelf information for a single user.   
+This is a source plugin for GatsbyJS to pull information from the GoodReads API.  It is an alternative to the prexisting gatsby-source-goodreads by Daniel Oliver.  The goal is to grabs all the books, author, and shelf information for a single user while preserving the graphical nature of the data; the original pulls these books in under a single node.  
 
 ## **WARNING**
 This plugin is in pre-release status!  **It currently only provides the first 200 books and authors for a user -- no review information or shevles yet**; these are still in progress.  Check back soon, file a pull request, or just use at your own risk until this warning is removed!
@@ -8,7 +8,7 @@ This plugin is in pre-release status!  **It currently only provides the first 20
 ## Install
 
 ```bash
-npm install --save gatsby-source-goodreads
+npm install --save gatsby-source-good-reads
 ```
 
 
@@ -17,7 +17,7 @@ npm install --save gatsby-source-goodreads
 // In your gatsby-config.js
 plugins: [
 	{
-	      resolve: "gatsby-source-goodreads",
+	      resolve: "gatsby-source-good-reads",
 	      options: {
             api_key: '<<YOUR GOODREADS API KEY>>'
 	        user_id: '<<USER ID TO TRACK>>'
