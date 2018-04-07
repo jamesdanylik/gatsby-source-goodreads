@@ -20,7 +20,7 @@ plugins: [
 	      resolve: "gatsby-source-goodreads",
 	      options: {
             api_key: '<<YOUR GOODREADS API KEY>>'
-	        username: '<<USERNAME TO TRACK>>'
+	        user_id: '<<USER ID TO TRACK>>'
 	      },
 	},
 	...
