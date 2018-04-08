@@ -1,5 +1,5 @@
 {
-  "name": "gatsby-source-good-reads",
+  "name": "@jamesdanylik/gatsby-source-goodreads",
   "version": "0.0.1",
   "description": "Gatsby source plugin for building websites using GoodReads as a data source",
   "dependencies": {
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jamesdanylik/gatsby-source-good-reads.git"
+    "url": "git+https://github.com/jamesdanylik/gatsby-source-goodreads.git"
   },
   "keywords": [
     "gatsby",
@@ -31,7 +31,7 @@
   "author": "James Danylik <james.danylik@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jamesdanylik/gatsby-source-good-reads/issues"
+    "url": "https://github.com/jamesdanylik/gatsby-source-goodreads/issues"
   },
-  "homepage": "https://github.com/jamesdanylik/gatsby-source-good-reads#readme"
+  "homepage": "https://github.com/jamesdanylik/gatsby-source-goodreads#readme"
 }
