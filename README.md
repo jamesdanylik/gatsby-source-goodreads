@@ -1,9 +1,12 @@
 # gatsby-source-goodreads
 
-This is a source plugin for GatsbyJS to pull information from the GoodReads API.  It is an alternative to the prexisting gatsby-source-goodreads by Daniel Oliver.  The goal is to grabs all the books, author, and shelf information for a single user while preserving the links between data; the original pulls these books in under a single node type.  
+This is a source plugin for GatsbyJS to pull information from the GoodReads API.  It is an alternative to gatsby-source-goodreads by Daniel Oliver, which predates it.  While the original pulls these books in under a single node type, the goal in my version is to grabs all the books, author, and shelf information for a single user while preserving the links between data.  
+
+## Notes on GoodReads API Structure
+Note that good reads keeps the books and ratings as seperate data objects; these reviews are what are placed on shelves, not books, and I preserve this relation to provide the most transparant access possible.  In short, your data is in the reviews nodes; data on the book itself is in the book node.
 
 ## **WARNING**
-This plugin is in pre-release status!  **It currently only provides the first 200 books and authors for a user -- no review information or shevles yet**; these are still in progress.  Check back soon, file a pull request, or just use at your own risk until this warning is removed!
+This plugin is in pre-release status!  **It currently only provides the first 200 reviews for a user**; retrieving more is still a work-in-progress.  Check back soon, file a pull request, or just use at your own risk until this warning is removed!
 
 ## Install
 
@@ -28,6 +31,63 @@ plugins: [
 ```
 
 ## Provided Queries
+
+### Reviews
+```graphql
+  allGoodreadsReview {
+    edges {
+      node {
+        id
+        rating
+        votes
+        spoiler_flag
+        spoilers_state
+        recommended_by
+        recommended_for
+        started_at
+        read_at
+        date_added
+        date_updated
+        read_count
+        body
+        comments_count
+        url
+        link
+        owned
+        book {
+          id
+          # book node here!
+          # see book query for all fields
+        }
+        shelves {
+          id
+          # shelf nodes here!
+          # see shelf query for all fields
+        }
+      }
+    }
+  }
+  
+```
+
+### Shelves
+```graphql
+  allGoodreadsShelf {
+    edges {
+      node {
+        id
+        name
+        exclusive
+        review_shelf_id
+        reviews {
+          id
+          # reviews nodes here!
+          # see review query for all fields
+        }
+      }
+    }
+  }
+```
 
 ### Books
 ```graphql
@@ -55,15 +115,20 @@ plugins: [
         average_rating, 
         ratings_count, 
         description,
+        published,
+        work {
+          id
+          uri
+        }
         authors {
           id
           # author nodes here!
           # see author query for all fields
         }
-        published,
-        work {
+        reviews {
           id
-          uri
+          # review nodes here!
+          # see review query for all fields
         }
       }
     }

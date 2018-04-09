@@ -31,7 +31,37 @@ function unpack(obj) {
 	var ret;
 	if(typeof obj[0] !== 'object') {
 		ret = obj[0]
-	} else {
+	} 
+	else if (obj[0].hasOwnProperty('shelf')) { // shelves?
+		var shelf_nodes = {}
+		var real_ret = []
+		obj.forEach(shelf => {
+			var shelfObj = {}
+
+			var keys = [
+				"name",
+				"exclusive",
+				"id",
+				"review_shelf_id"
+			]
+
+			keys.forEach(key => {
+				shelfObj[key] = shelf.shelf[0]['$'][key]
+			})
+
+			//prep review link
+
+			shelfObj.reviews___NODE = []
+
+			shelf_nodes[generateNodeId(SHELF_TYPE, shelfObj.id)] = ShelfNode(shelfObj)
+			real_ret.push(generateNodeId(SHELF_TYPE, shelf.shelf[0]['$']['id']))
+		})
+		ret = {
+				shelves: shelf_nodes,
+				ret: real_ret
+		}
+	}
+	else {
 		if(obj[0].hasOwnProperty('_')) {
 			ret = obj[0]['_']
 		}
@@ -96,11 +126,14 @@ exports.sourceNodes = async({boundActionCreators}, {
 		//console.log(result)
 
 		//console.log('\nGot ' + result.GoodreadsResponse.reviews.length + " reviews")
-		result.GoodreadsResponse.reviews.forEach(reviewObj => {
-			reviewObj.review.forEach(review => {
+		result.GoodreadsResponse.reviews.forEach(reviewResp => {
+			reviewResp.review.forEach(review => {
 				const b = review.book[0]
 				if(books[generateNodeId(BOOK_TYPE, unpack(b.id))]) {
 					// book already exists, just link
+					books[generateNodeId(BOOK_TYPE, unpack(b.id))].reviews___NODE.push(
+						generateNodeId(REVIEW_TYPE, unpack(review.id))
+					)
 				} else {
 					var bookObj = {}
 					const keys =  [
@@ -148,19 +181,72 @@ exports.sourceNodes = async({boundActionCreators}, {
 						}
 					}
 
+					// Add review link
+					bookObj.reviews___NODE = [generateNodeId(REVIEW_TYPE, unpack(review.id))]
+
 					books[generateNodeId(BOOK_TYPE, unpack(b.id))] = BookNode(bookObj)
 				}
+
+				var reviewObj = {}
+				const keys = [
+					"id",
+					"rating",
+					"votes",
+					"spoiler_flag",
+					"spoilers_state",
+					"shelves", // need to post process
+					"recommended_for",
+					"recommended_by",
+					"started_at",
+					"read_at",
+					"date_added",
+					"date_updated",
+					"read_count",
+					"body",
+					"comments_count",
+					"url",
+					"link",
+					"owned"
+				]
+
+				keys.forEach(key => {
+					reviewObj[key] = unpack(review[key])
+				})
+
+				var shelfNodes = reviewObj.shelves.shelves
+				reviewObj.shelves___NODE = reviewObj.shelves.ret
+				delete reviewObj.shelves
+
+				for(var key in shelfNodes) {
+					if(!(key in shelves)) {
+						shelfNodes[key].reviews___NODE.push(generateNodeId(REVIEW_TYPE, unpack(review.id)))
+						shelves[key] = shelfNodes[key]
+					}
+					else {
+						shelves[key].reviews___NODE.push(generateNodeId(REVIEW_TYPE, unpack(review.id)))
+					}
+				}
+
+				// Add book link
+				reviewObj.book___NODE = generateNodeId(BOOK_TYPE, unpack(b.id))
+
+				createNode(ReviewNode(reviewObj))
 			})
 		})
 
-		console.log("\nCreating " + Object.keys(authors).length + " authors")
+		//console.log("\nCreating " + Object.keys(authors).length + " authors")
 		for(var key in authors) {
 			createNode(authors[key])
 		}
 
-		console.log("\nCreating " + Object.keys(books).length + " books")
+		//console.log("\nCreating " + Object.keys(books).length + " books")
 		for(var key in books) {
 			createNode(books[key])
+		}
+
+		//console.log("\n Creaing " + Object.keys(shelves).length + " shelves")
+		for(var key in shelves) {
+			createNode(shelves[key])
 		}
 	})
 

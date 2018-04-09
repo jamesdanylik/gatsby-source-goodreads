@@ -1,6 +1,6 @@
 {
   "name": "@jamesdanylik/gatsby-source-goodreads",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Gatsby source plugin for building websites using GoodReads as a data source",
   "dependencies": {
     "gatsby-node-helpers": "^0.1.3",
