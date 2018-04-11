@@ -1,5 +1,7 @@
 # gatsby-source-goodreads
 
+[![Build Status](https://travis-ci.org/jamesdanylik/gatsby-source-goodreads.svg?branch=master)](https://travis-ci.org/jamesdanylik/gatsby-source-goodreads)
+
 This is a source plugin for GatsbyJS to pull information from the GoodReads API.  It is an alternative to gatsby-source-goodreads by Daniel Oliver, which predates it.  While the original pulls these books in under a single node type, the goal in my version is to grabs all the books, author, and shelf information for a single user while preserving the links between data.  
 
 ## Notes on GoodReads API Structure
