@@ -1,9 +1,7 @@
 # gatsby-source-goodreads
 
 [![Build Status](https://travis-ci.org/jamesdanylik/gatsby-source-goodreads.svg?branch=master)](https://travis-ci.org/jamesdanylik/gatsby-source-goodreads)
-
 [![npm package](https://img.shields.io/npm/v/@jamesdanylik/gatsby-source-goodreads.svg)](https://www.npmjs.org/package/@jamesdanylik/gatsby-source-goodreads.svg)
-
 [![npm package](https://img.shields.io/npm/dm/@jamesdanylik/gatsby-source-goodreads.svg)](https://npmcharts.com/compare/@jamesdanylik/gatsby-source-goodreads?minimal=true)
 
 
