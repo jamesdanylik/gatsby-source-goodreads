@@ -10,14 +10,16 @@
   "scripts": {
     "build": "babel src --out-dir . --ignore __tests__",
     "prepublish": "cross-env NODE_ENV=production npm run build",
-    "watch": "babel -w src --out-dir . --ignore __tests__"
+    "watch": "babel -w src --out-dir . --ignore __tests__",
+    "test": "jest"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-es2015-destructuring": "^6.23.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "cross-env": "^5.1.1"
+    "cross-env": "^5.1.1",
+    "jest": "^22.4.3"
   },
   "repository": {
     "type": "git",
