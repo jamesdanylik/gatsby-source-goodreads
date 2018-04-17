@@ -115,140 +115,149 @@ exports.sourceNodes = async({boundActionCreators}, {
 }) => {
 	const { createNode } = boundActionCreators
 
-	var xml = await api(reviewsUrl({key: api_key, id: user_id, per_page:200}))
-
+	var currentPage = 1
+	var sourceDone = false
 	var reviews = {}
 	var authors = {}
 	var books = {}
 	var shelves = {}
 
-	parseString(xml, {trim: true}, (err, result) => {
-		//console.log(result)
+	while(!sourceDone) {
+		var xml = await api(reviewsUrl({key: api_key, id: user_id, per_page:200, page: currentPage}))
 
-		//console.log('\nGot ' + result.GoodreadsResponse.reviews.length + " reviews")
-		result.GoodreadsResponse.reviews.forEach(reviewResp => {
-			reviewResp.review.forEach(review => {
-				const b = review.book[0]
-				if(books[generateNodeId(BOOK_TYPE, unpack(b.id))]) {
-					// book already exists, just link
-					books[generateNodeId(BOOK_TYPE, unpack(b.id))].reviews___NODE.push(
-						generateNodeId(REVIEW_TYPE, unpack(review.id))
-					)
-				} else {
-					var bookObj = {}
-					const keys =  [
-						"id", 
-						"isbn", 
-						"isbn13", 
-						"text_reviews_count", 
-						"uri", 
-						"title", 
-						"title_without_series", 
-						"image_url", 
-						"small_image_url", 
-						"large_image_url", 
-						"link", 
-						"num_pages", 
-						"format", 
-						"edition_information", 
-						"publisher", 
-						"publication_day", 
-						"publication_month", 
-						"publication_year", 
-						"average_rating", 
-						"ratings_count", 
-						"description", 
-						"authors", 
-						"published", 
-						"work"
+		parseString(xml, {trim: true}, (err, result) => {
+			result.GoodreadsResponse.reviews.forEach(reviewResp => {
+				reviewResp.review.forEach(review => {
+					const b = review.book[0]
+					if(books[generateNodeId(BOOK_TYPE, unpack(b.id))]) {
+						// book already exists, just link
+						books[generateNodeId(BOOK_TYPE, unpack(b.id))].reviews___NODE.push(
+							generateNodeId(REVIEW_TYPE, unpack(review.id))
+						)
+					} else {
+						var bookObj = {}
+						const keys =  [
+							"id", 
+							"isbn", 
+							"isbn13", 
+							"text_reviews_count", 
+							"uri", 
+							"title", 
+							"title_without_series", 
+							"image_url", 
+							"small_image_url", 
+							"large_image_url", 
+							"link", 
+							"num_pages", 
+							"format", 
+							"edition_information", 
+							"publisher", 
+							"publication_day", 
+							"publication_month", 
+							"publication_year", 
+							"average_rating", 
+							"ratings_count", 
+							"description", 
+							"authors", 
+							"published", 
+							"work"
+						]
+						keys.forEach(key => {
+							bookObj[key] = unpack(b[key])
+						})
+
+						// post process authors
+						var authorNodes = bookObj.authors.authors
+						bookObj.authors___NODE = bookObj.authors.ret
+						delete bookObj.authors
+
+						for(var key in authorNodes) {
+							if(!(key in authors)) {
+								authorNodes[key].books___NODE.push(generateNodeId(BOOK_TYPE, unpack(b.id)))
+								authors[key] = authorNodes[key]
+							}
+							else {
+								authors[key].books___NODE.push(generateNodeId(BOOK_TYPE, unpack(b.id)))
+							}
+						}
+
+						// Add review link
+						bookObj.reviews___NODE = [generateNodeId(REVIEW_TYPE, unpack(review.id))]
+
+						books[generateNodeId(BOOK_TYPE, unpack(b.id))] = BookNode(bookObj)
+					}
+
+					var reviewObj = {}
+					const keys = [
+						"id",
+						"rating",
+						"votes",
+						"spoiler_flag",
+						"spoilers_state",
+						"shelves", // need to post process
+						"recommended_for",
+						"recommended_by",
+						"started_at",
+						"read_at",
+						"date_added",
+						"date_updated",
+						"read_count",
+						"body",
+						"comments_count",
+						"url",
+						"link",
+						"owned"
 					]
+
 					keys.forEach(key => {
-						bookObj[key] = unpack(b[key])
+						reviewObj[key] = unpack(review[key])
 					})
 
-					// post process authors
-					var authorNodes = bookObj.authors.authors
-					bookObj.authors___NODE = bookObj.authors.ret
-					delete bookObj.authors
+					var shelfNodes = reviewObj.shelves.shelves
+					reviewObj.shelves___NODE = reviewObj.shelves.ret
+					delete reviewObj.shelves
 
-					for(var key in authorNodes) {
-						if(!(key in authors)) {
-							authorNodes[key].books___NODE.push(generateNodeId(BOOK_TYPE, unpack(b.id)))
-							authors[key] = authorNodes[key]
+					for(var key in shelfNodes) {
+						if(!(key in shelves)) {
+							shelfNodes[key].reviews___NODE.push(generateNodeId(REVIEW_TYPE, unpack(review.id)))
+							shelves[key] = shelfNodes[key]
 						}
 						else {
-							authors[key].books___NODE.push(generateNodeId(BOOK_TYPE, unpack(b.id)))
+							shelves[key].reviews___NODE.push(generateNodeId(REVIEW_TYPE, unpack(review.id)))
 						}
 					}
 
-					// Add review link
-					bookObj.reviews___NODE = [generateNodeId(REVIEW_TYPE, unpack(review.id))]
+					// Add book link
+					reviewObj.book___NODE = generateNodeId(BOOK_TYPE, unpack(b.id))
 
-					books[generateNodeId(BOOK_TYPE, unpack(b.id))] = BookNode(bookObj)
-				}
-
-				var reviewObj = {}
-				const keys = [
-					"id",
-					"rating",
-					"votes",
-					"spoiler_flag",
-					"spoilers_state",
-					"shelves", // need to post process
-					"recommended_for",
-					"recommended_by",
-					"started_at",
-					"read_at",
-					"date_added",
-					"date_updated",
-					"read_count",
-					"body",
-					"comments_count",
-					"url",
-					"link",
-					"owned"
-				]
-
-				keys.forEach(key => {
-					reviewObj[key] = unpack(review[key])
+					createNode(ReviewNode(reviewObj))
 				})
 
-				var shelfNodes = reviewObj.shelves.shelves
-				reviewObj.shelves___NODE = reviewObj.shelves.ret
-				delete reviewObj.shelves
-
-				for(var key in shelfNodes) {
-					if(!(key in shelves)) {
-						shelfNodes[key].reviews___NODE.push(generateNodeId(REVIEW_TYPE, unpack(review.id)))
-						shelves[key] = shelfNodes[key]
-					}
-					else {
-						shelves[key].reviews___NODE.push(generateNodeId(REVIEW_TYPE, unpack(review.id)))
-					}
+				if(reviewResp['$']['end'] == reviewResp['$']['total']) {
+					sourceDone = true
+					//console.log('Source done')
+				} else {
+					currentPage = currentPage + 1
+					//console.log('Grabbing next page')
 				}
-
-				// Add book link
-				reviewObj.book___NODE = generateNodeId(BOOK_TYPE, unpack(b.id))
-
-				createNode(ReviewNode(reviewObj))
 			})
 		})
+	}
 
-		//console.log("\nCreating " + Object.keys(authors).length + " authors")
-		for(var key in authors) {
-			createNode(authors[key])
-		}
+	//console.log("\nCreating " + Object.keys(authors).length + " authors")
+	for(var key in authors) {
+		createNode(authors[key])
+	}
 
-		//console.log("\nCreating " + Object.keys(books).length + " books")
-		for(var key in books) {
-			createNode(books[key])
-		}
+	//console.log("\nCreating " + Object.keys(books).length + " books")
+	for(var key in books) {
+		createNode(books[key])
+	}
 
-		//console.log("\n Creaing " + Object.keys(shelves).length + " shelves")
-		for(var key in shelves) {
-			createNode(shelves[key])
-		}
-	})
+	//console.log("\n Creaing " + Object.keys(shelves).length + " shelves")
+	for(var key in shelves) {
+		createNode(shelves[key])
+	}
 
 	return
 }

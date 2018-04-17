@@ -1,7 +1,7 @@
 # gatsby-source-goodreads
 
 [![Build Status](https://travis-ci.org/jamesdanylik/gatsby-source-goodreads.svg?branch=master)](https://travis-ci.org/jamesdanylik/gatsby-source-goodreads)
-[![npm package](https://img.shields.io/npm/v/@jamesdanylik/gatsby-source-goodreads.svg)](https://www.npmjs.org/package/@jamesdanylik/gatsby-source-goodreads.svg)
+[![npm package](https://img.shields.io/npm/v/@jamesdanylik/gatsby-source-goodreads.svg)](https://www.npmjs.org/package/@jamesdanylik/gatsby-source-goodreads)
 [![npm package](https://img.shields.io/npm/dm/@jamesdanylik/gatsby-source-goodreads.svg)](https://npmcharts.com/compare/@jamesdanylik/gatsby-source-goodreads?minimal=true)
 
 
@@ -10,9 +10,6 @@ This is a source plugin for GatsbyJS to pull information from the GoodReads API.
 
 ## Notes on GoodReads API Structure
 Note that good reads keeps the books and ratings as seperate data objects; these reviews are what are placed on shelves, not books, and I preserve this relation to provide the most transparant access possible.  In short, your data is in the reviews nodes; data on the book itself is in the book node.
-
-## **WARNING**
-This plugin is in pre-release status!  **It currently only provides the first 200 reviews for a user**; retrieving more is still a work-in-progress.  Check back soon, file a pull request, or just use at your own risk until this warning is removed!
 
 ## Install
 
