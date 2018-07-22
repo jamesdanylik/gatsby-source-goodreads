@@ -25,8 +25,8 @@ plugins: [
 	{
 	      resolve: "@jamesdanylik/gatsby-source-goodreads",
 	      options: {
-            api_key: '<<YOUR GOODREADS API KEY>>'
-	        user_id: '<<USER ID TO TRACK>>'
+						key: '<<YOUR GOODREADS API KEY>>',
+						id: '<<USER ID TO TRACK>>'
 	      },
 	},
 	...
