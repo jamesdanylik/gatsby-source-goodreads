@@ -22,14 +22,14 @@ npm install --save @jamesdanylik/gatsby-source-goodreads
 ```javascript
 // In your gatsby-config.js
 plugins: [
-	{
-	      resolve: "@jamesdanylik/gatsby-source-goodreads",
-	      options: {
-						key: '<<YOUR GOODREADS API KEY>>',
-						id: '<<USER ID TO TRACK>>'
-	      },
-	},
-	...
+{
+  resolve: "@jamesdanylik/gatsby-source-goodreads",
+  options: {
+    key: '<<YOUR GOODREADS API KEY>>',
+    id: '<<USER ID TO TRACK>>'
+  },
+},
+...
 ]
 ```
 
@@ -37,128 +37,128 @@ plugins: [
 
 ### Reviews
 ```graphql
-  allGoodreadsReview {
-    edges {
-      node {
-        id
-        rating
-        votes
-        spoiler_flag
-        spoilers_state
-        recommended_by
-        recommended_for
-        started_at
-        read_at
-        date_added
-        date_updated
-        read_count
-        body
-        comments_count
-        url
-        link
-        owned
-        book {
-          id
-          # book node here!
-          # see book query for all fields
-        }
-        shelves {
-          id
-          # shelf nodes here!
-          # see shelf query for all fields
-        }
+allGoodreadsReview {
+  edges {
+    node {
+      id
+	rating
+	votes
+	spoiler_flag
+	spoilers_state
+	recommended_by
+	recommended_for
+	started_at
+	read_at
+	date_added
+	date_updated
+	read_count
+	body
+	comments_count
+	url
+	link
+	owned
+	book {
+	  id
+	  # book node here!
+	  # see book query for all fields
+	}
+      shelves {
+	id
+	# shelf nodes here!
+	# see shelf query for all fields
       }
     }
   }
-  
+}
+
 ```
 
 ### Shelves
 ```graphql
-  allGoodreadsShelf {
-    edges {
-      node {
-        id
-        name
-        exclusive
-        review_shelf_id
-        reviews {
-          id
-          # reviews nodes here!
-          # see review query for all fields
-        }
-      }
+allGoodreadsShelf {
+  edges {
+    node {
+      id
+	name
+	exclusive
+	review_shelf_id
+	reviews {
+	  id
+	  # reviews nodes here!
+	  # see review query for all fields
+	}
     }
   }
+}
 ```
 
 ### Books
 ```graphql
-  allGoodreadsBook {
-    edges {
-      node {
-        id, 
-        isbn, 
-        isbn13, 
-        text_reviews_count, 
-        uri, 
-        title, 
-        title_without_series, 
-        image_url, 
-        small_image_url, 
-        large_image_url, 
-        link, 
-        num_pages, 
-        format, 
-        edition_information, 
-        publisher, 
-        publication_day, 
-        publication_month, 
-        publication_year, 
-        average_rating, 
-        ratings_count, 
-        description,
-        published,
-        work {
-          id
-          uri
-        }
-        authors {
-          id
-          # author nodes here!
-          # see author query for all fields
-        }
-        reviews {
-          id
-          # review nodes here!
-          # see review query for all fields
-        }
+allGoodreadsBook {
+  edges {
+    node {
+      id, 
+	isbn, 
+	isbn13, 
+	text_reviews_count, 
+	uri, 
+	title, 
+	title_without_series, 
+	image_url, 
+	small_image_url, 
+	large_image_url, 
+	link, 
+	num_pages, 
+	format, 
+	edition_information, 
+	publisher, 
+	publication_day, 
+	publication_month, 
+	publication_year, 
+	average_rating, 
+	ratings_count, 
+	description,
+	published,
+	work {
+	  id
+	    uri
+	}
+      authors {
+	id
+	# author nodes here!
+	# see author query for all fields
+      }
+      reviews {
+	id
+	# review nodes here!
+	# see review query for all fields
       }
     }
   }
+}
 ```
 
 ### Authors
 ```graphql
-  allGoodreadsAuthor {
-    edges {
-      node {
-        id
-        name
-        role
-        image_url
-        small_image_url
-        link
-        average_rating
-        ratings_count
-        text_reviews_count
-        books {
-          id
-          # book nodes here!
-          # see book query for all available fields
-        }
-      }
+allGoodreadsAuthor {
+  edges {
+    node {
+      id
+	name
+	role
+	image_url
+	small_image_url
+	link
+	average_rating
+	ratings_count
+	text_reviews_count
+	books {
+	  id
+	  # book nodes here!
+	  # see book query for all available fields
+	}
     }
   }
+}
 ```
 
