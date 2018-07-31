@@ -1,6 +1,5 @@
 # gatsby-source-goodreads
 
-[![Build Status](https://travis-ci.org/jamesdanylik/gatsby-source-goodreads.svg?branch=master)](https://travis-ci.org/jamesdanylik/gatsby-source-goodreads)
 [![npm package](https://img.shields.io/npm/v/@jamesdanylik/gatsby-source-goodreads.svg)](https://www.npmjs.org/package/@jamesdanylik/gatsby-source-goodreads)
 [![npm package](https://img.shields.io/npm/dm/@jamesdanylik/gatsby-source-goodreads.svg)](https://npmcharts.com/compare/@jamesdanylik/gatsby-source-goodreads?minimal=true)
 
@@ -10,6 +9,13 @@ This is a source plugin for GatsbyJS to pull information from the GoodReads API.
 
 ## Notes on GoodReads API Structure
 Note that good reads keeps the books and ratings as seperate data objects; these reviews are what are placed on shelves, not books, and I preserve this relation to provide the most transparant access possible.  In short, your data is in the reviews nodes; data on the book itself is in the book node.
+
+## Notes on Testing/TravisCI
+This plugin originally had its own .travis.yml file.  Originally, this did the babel traspilation step and verified that no errors took place; it never was capable of testing the actually funcationality of the plugin without a GatsbyJS build process to test in.  
+
+To improve this, I've moved testing for all my GatsbyJS source plugins to test suites in the repository for www-jamesdanylik-com.  Here, TravisCI handles building my Gatsby site, running all my source plugins; after a build is created successfully, I run test suites in Jest with Pupeteer on each of my plugins and the entire created site -- testing in this manner enables access to the complete plugin run, and allows me to ensure each of the plugins are running as expected.
+
+TravisCI is configured to rebuild my site daily, regardless of activity, so I should detect outages fairly quickly.
 
 ## Install
 
